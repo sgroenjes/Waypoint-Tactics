@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Waypoint Tactics.unity
+  isLoaded: 1
+  isActive: 1
