@@ -60,17 +60,17 @@ public class CoverPoint : MonoBehaviour {
             {
                 for (i = 0; i < iterations; i++)
                 {
-                    rand.Add((float)nDist.NextDouble());
+                    rand.Add(GetRandomNDist());
                     rand.Add(Random.value);
-                    rand.Add((float)nDist.NextDouble());
+                    rand.Add(GetRandomNDist());
                 }
             }
             for (i = 0; i < iterations; i++)
             {
                 dir = cover.transform.position;
-                dir.x += rand[i*3] /3f * player.radius;
+                dir.x += rand[i*3] * player.radius;
                 dir.y += rand[i*3+1] * player.height * player.transform.localScale.y;
-                dir.z += rand[i*3+2] /3f * player.radius;
+                dir.z += rand[i*3+2] * player.radius;
                 dir = (dir - turret.transform.position).normalized;
                 Gizmos.DrawRay(turret.transform.position, dir*150);
             }
@@ -117,9 +117,9 @@ public class CoverPoint : MonoBehaviour {
         {
             from = turret.transform.position;
             to = cover.transform.position;
-            to.x += (Mathf.Min(3,(float)nDist.NextDouble()) / 3f) * player.radius;
+            to.x += GetRandomNDist() * player.radius;
             to.y += Random.value*player.height*player.transform.localScale.y;
-            to.z += (Mathf.Min(3,(float)nDist.NextDouble()) / 3f) * player.radius;
+            to.z += GetRandomNDist() * player.radius;
             Vector3 dir = to - from;
             dir.Scale(new Vector3(2f, 2f, 2f));
             if (Physics.Raycast(from, dir, out hit, 150f,mask))
@@ -132,6 +132,15 @@ public class CoverPoint : MonoBehaviour {
         }
         player.transform.position = tmpLoc;
         return 1 - (float)hits / iterations;
+    }
+
+    float GetRandomNDist()
+    {
+        float tmp = (float)nDist.NextDouble();
+        if (tmp < 0)
+            return Mathf.Max(-3f, tmp) / 3f;
+        else
+            return Mathf.Min(3f, tmp) / 3f;
     }
 
 }
